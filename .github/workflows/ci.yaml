@@ -48,3 +48,9 @@ jobs:
         with:
           name: pytest-report-python-${{ matrix.python-version }}
           path: reports/report.html
+
+      - name: Debug app.py
+        run: |
+          echo "===== app.py ====="
+            cat -n app.py
+            echo "=================="
