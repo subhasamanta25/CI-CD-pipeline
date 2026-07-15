@@ -35,11 +35,11 @@ jobs:
           pip install -r requirements.txt
           pip install flake8 pytest pytest-html
 
-      - name: Debug app.py
+      - name: Debug repository
         run: |
-          echo "===== app.py ====="
-            cat -n app.py
-            echo "=================="
+          pwd
+          ls -la
+          find . -maxdepth 2 -type f
 
       - name: Run flake8
         run: flake8 .
