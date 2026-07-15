@@ -35,6 +35,12 @@ jobs:
           pip install -r requirements.txt
           pip install flake8 pytest pytest-html
 
+      - name: Debug app.py
+        run: |
+          echo "===== app.py ====="
+            cat -n app.py
+            echo "=================="
+
       - name: Run flake8
         run: flake8 .
 
@@ -48,9 +54,3 @@ jobs:
         with:
           name: pytest-report-python-${{ matrix.python-version }}
           path: reports/report.html
-
-      - name: Debug app.py
-        run: |
-          echo "===== app.py ====="
-            cat -n app.py
-            echo "=================="
