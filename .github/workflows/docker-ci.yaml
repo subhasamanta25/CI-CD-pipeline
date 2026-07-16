@@ -23,5 +23,5 @@ jobs:
         with:
           context: .
           push: true
-          tags: username/my-app:latest
+          tags: subha250504/ci-cd-project:latest
 
