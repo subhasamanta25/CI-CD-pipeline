@@ -23,5 +23,5 @@ jobs:
         with:
           context: .
           push: true
-          tags: subha250504/my-app:latest
+          tags: subha250504/my-app:v1
 
