@@ -44,10 +44,22 @@ jobs:
       - name: Run flake8
         run: flake8 .
 
+      - name: Debug Python imports
+        run: |
+          pwd
+          ls -la
+          find . -maxdepth 2 -type f
+          python --version
+          python -c "import os; print(os.getcwd())"
+          python -c "import sys; print(sys.path)"
+          python -c "import app; print(app.__file__)"
+
       - name: Run pytest
+        env:
+          PYTHONPATH: ${{ github.workspace }}
         run: |
           mkdir -p reports
-          pytest --html=reports/report.html --self-contained-html
+          python -m pytest tests --html=reports/report.html --self-contained-html
 
       - name: Upload pytest report
         uses: actions/upload-artifact@v4
