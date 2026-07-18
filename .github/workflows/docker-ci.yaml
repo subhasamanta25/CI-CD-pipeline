@@ -29,7 +29,7 @@ jobs:
           context: .
           push: true
           tags: |
-            subha250504/my-app:v1
+            subha250504/my-app:v5
             subha250504/my-app:test
 
       - name: Run Trivy Scan 
