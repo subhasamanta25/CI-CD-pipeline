@@ -32,7 +32,17 @@ jobs:
           pip install -r requirements.txt
           pip install pytest
 
+      - name: Debug Environment
+        run: |
+          pwd
+          ls -R
+          python --version
+          python -c "import os; print(os.getcwd())"
+          python -c "import app; print(app.__file__)"
+
       - name: Run Unit Test
+        env:
+          PYTHONPATH: ${{ github.worspace }}
         run: |
           pytest
 
