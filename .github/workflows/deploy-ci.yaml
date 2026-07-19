@@ -35,7 +35,7 @@ jobs:
       - name: Debug Environment
         run: |
           pwd
-          ls -R
+          ls -la
           python --version
           python -c "import os; print(os.getcwd())"
           python -c "import app; print(app.__file__)"
