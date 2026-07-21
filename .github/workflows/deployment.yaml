@@ -21,7 +21,7 @@ jobs:
           key: ${{ secrets.EC2_SSH_KEY }}
 
           script: |
-            docker pull subha250504/flask-app:latest
+            docker pull subha250504/flask-app:v2
 
             docker stop flask-app || true
             docker rm flask-app || true
@@ -30,4 +30,22 @@ jobs:
               --name flask-app \
               -p 80:5000 \
               --restart always \
-              subha250504/flask-app:latest
+              subha250504/flask-app:v2
+            
+            sleep 10
+
+            if curl -f http://localhost; then
+              echo "Deployment Successful"
+            else
+              echo "Deployment Failed"
+
+              docker stop flask-app
+              docker rm flask-app   
+
+              docker run -d \
+                --name flask-app \
+                -p 80:5000 \
+                subha250504/flask-app:v1
+
+              exit 1
+            fi     
