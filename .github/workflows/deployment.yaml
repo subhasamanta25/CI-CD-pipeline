@@ -9,7 +9,6 @@ on:
 
 jobs:
   deploy:
-    needs: docker
     runs-on: ubuntu-latest
 
     steps:
@@ -21,7 +20,7 @@ jobs:
           key: ${{ secrets.EC2_SSH_KEY }}
 
           script: |
-            docker pull subha250504/flask-app:v2
+            docker pull subha250504/flask-app:${{ github.sha }}
 
             docker stop flask-app || true
             docker rm flask-app || true
@@ -30,9 +29,9 @@ jobs:
               --name flask-app \
               -p 80:5000 \
               --restart always \
-              subha250504/flask-app:v2
+              subha250504/flask-app:${{ github.sha }}
             
-            sleep 10
+            sleep 20
 
             if curl -f http://localhost; then
               echo "Deployment Successful"
