@@ -16,13 +16,26 @@ pipeline {
         }
 
         stage('Test') {
+            environment {
+                PYTHONPATH = "${WORKSPACE}"
+            }
+
             steps {
                 echo "Installing dependencies and running tests..."
                 sh '''
+                    pwd
+                    ls -la
+
                     python3 -m venv venv
                     . venv/bin/activate
+
                     pip install --upgrade pip
                     pip install -r requirements.txt
+
+                    python -c "import os; print(os.getcwd())"
+                    python -c "import sys; print(sys.path)"
+                    python -c "import app; print(app.__file__)"
+
                     pytest
                 '''
             }
