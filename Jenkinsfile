@@ -1,35 +1,72 @@
 pipeline {
     agent any
 
+    environment {
+        IMAGE_NAME = "subha250504/flask-app"
+        IMAGE_TAG = "latest"
+    }
+
     stages {
 
         stage('Checkout') {
             steps {
+                echo "Checking out source code..."
                 checkout scm
             }
         }
 
         stage('Test') {
             steps {
+                echo "Installing dependencies and running tests..."
                 sh '''
-                python3 -m venv venv
-                . venv/bin/activate
-                pip install -r requirements.txt
-                pytest
+                    python3 -m pip install --upgrade pip
+                    pip3 install -r requirements.txt
+                    pytest
                 '''
             }
         }
 
-        stage('Build') {
+        stage('Build Docker') {
             steps {
-                sh 'docker build -t subha250504/flask-app:latest .'
+                echo "Building Docker image..."
+                sh "docker build -t ${IMAGE_NAME}:${IMAGE_TAG} ."
             }
         }
 
-        stage('Push') {
+        stage('Push to Hub') {
             steps {
-                sh 'docker push subha250504/flask-app:latest'
+                echo "Logging into Docker Hub..."
+
+                withCredentials([
+                    usernamePassword(
+                        credentialsId: 'dockerhub-credentials',
+                        usernameVariable: 'DOCKER_USER',
+                        passwordVariable: 'DOCKER_PASS'
+                    )
+                ]) {
+
+                    sh '''
+                        echo "$DOCKER_PASS" | docker login -u "$DOCKER_USER" --password-stdin
+                        docker push '"${IMAGE_NAME}:${IMAGE_TAG}"'
+                        docker logout
+                    '''
+                }
             }
+        }
+    }
+
+    post {
+        success {
+            echo "Pipeline completed successfully!"
+        }
+
+        failure {
+            echo "Pipeline failed!"
+        }
+
+        always {
+            echo "Cleaning workspace..."
+            cleanWs()
         }
     }
 }
